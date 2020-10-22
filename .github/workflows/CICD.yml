@@ -1,0 +1,76 @@
+# This is a basic workflow to help you get started with Actions
+
+name: SPFX CI CD
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          # Version Spec of the version to use.  Examples: 12.x, 10.15.1, >=10.15.0
+          node-version: 10.x
+          
+      - name: NPM Install
+        run: npm install
+        
+      - name: Gulp build
+        run: gulp build
+         
+      - name: npm test
+        run: npm test
+        
+      - name: gulp bundle
+        run: gulp bundle --ship
+        
+      - name: package solution
+        run: gulp package-solution --ship
+        
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: packageFile
+          # A file, directory or wildcard pattern that describes what to upload
+          path: sharepoint/solution/test-list-items.sppkg
+        
+      - name: CLI for Microsoft 365 Login
+        # You may pin to the exact commit or the version.
+        # uses: pnp/action-cli-login@10dfd3607e296e136ec9a2ff6c34aeee6d407f92
+        uses: pnp/action-cli-login@v2.0.0
+        with:
+          # Username (email address) of the admin
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          # Password of the admin
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          
+      - name: CLI for Microsoft 365 Deploy App
+        # You may pin to the exact commit or the version.
+        # uses: pnp/action-cli-deploy@28fc2db3511bd9e3b0c0720d7beb2c84481cd780
+        uses: pnp/action-cli-deploy@v2.0.0
+        with:
+          # Relative path of the app in your repo
+          APP_FILE_PATH: sharepoint/solution/test-list-items.sppkg
+          # Scope of the app catalog: tenant or sitecollection. Default is tenant
+          SCOPE: sitecollection
+          # The URL of the site collection where the solution package will be added. Required if scope is set to sitecollection
+          SITE_COLLECTION_URL: https://in8aakbh.sharepoint.com/sites/UHSD1
+          # True or false. Set to overwrite the existing package file. Default is false
+          OVERWRITE: true
