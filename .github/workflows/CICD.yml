@@ -52,6 +52,7 @@ jobs:
   deploy:
     # The type of runner that the job will run on
     runs-on: windows-latest
+    needs: [build]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -61,8 +62,7 @@ jobs:
       with:
         # Artifact name
         name: packageFile
-        path: packageFile
-
+        
     - name: PnP PowerShell Deploy App
       # You may pin to the exact commit or the version.
       # uses: aakashbhardwaj619/action-pnp-powershell-deploy@1914c8cc93afbef90b3aeb44e1369849835f0ca4
