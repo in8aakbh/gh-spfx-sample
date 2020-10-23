@@ -61,6 +61,7 @@ jobs:
       with:
         # Artifact name
         name: packageFile
+        path: packageFile
 
     - name: PnP PowerShell Deploy App
       # You may pin to the exact commit or the version.
