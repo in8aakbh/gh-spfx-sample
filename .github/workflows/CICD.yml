@@ -8,6 +8,9 @@ on:
   push:
     branches: [ beta ]
 
+env:
+  packageName: test-list-items.sppkg
+  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -47,7 +50,7 @@ jobs:
           # Artifact name
           name: packageFile
           # A file, directory or wildcard pattern that describes what to upload
-          path: sharepoint/solution/test-list-items.sppkg
+          path: sharepoint/solution/${{ env.packageName }}
         
   deploy:
     # The type of runner that the job will run on
@@ -75,7 +78,7 @@ jobs:
         # Password of the admin
         ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         # Relative path of the app in your repo
-        APP_FILE_PATH: packageFile/test-list-items.sppkg
+        APP_FILE_PATH: packageFile/${{ env.packageName }}
         # True or false. Set to overwrite the existing package file. Default is false
         OVERWRITE: true
         # Scope of the app catalog: Tenant|Site. Default is Tenant
