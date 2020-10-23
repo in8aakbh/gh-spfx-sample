@@ -78,7 +78,7 @@ jobs:
         # Password of the admin
         ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         # Relative path of the app in your repo
-        APP_FILE_PATH: packageFile/${{ env.packageName }}
+        APP_FILE_PATH: ${{ env.packageName }}
         # True or false. Set to overwrite the existing package file. Default is false
         OVERWRITE: true
         # Scope of the app catalog: Tenant|Site. Default is Tenant
